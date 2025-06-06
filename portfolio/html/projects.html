@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Dinith's Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* CSS Variables for theme colors */
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #7e22ce;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #cbd5e1;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Binary Rain Background */
+        #binary-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        nav.scrolled {
+            padding: 10px 0;
+            background: rgba(2, 6, 23, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 150px 0 50px;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .page-header p {
+            color: var(--gray-light);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Projects Section */
+        .projects-section {
+            padding: 50px 0 100px;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .project-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .project-img {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .project-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .project-card:hover .project-img img {
+            transform: scale(1.05);
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .project-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            font-size: 1.2rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .project-btn:hover {
+            transform: translateY(-5px);
+            background: var(--secondary);
+        }
+
+        .project-content {
+            padding: 25px;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .project-tag {
+            background: rgba(14, 165, 233, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .project-description {
+            color: var(--gray-light);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 40px 0 20px;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--light);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+
+            .page-header h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .page-header {
+                padding: 130px 0 40px;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .page-header p {
+                font-size: 1rem;
+            }
+
+            .project-card {
+                max-width: 350px;
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Binary Rain Background -->
+    <canvas id="binary-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="home.html" class="logo">Dinith<span>.dev</span></a>
+            <div class="nav-links">
+                <a href="home.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html" class="active">Projects</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Projects Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>What have I done?</h1>
+            <p>Explore a collection of my recent work. Each project represents a unique challenge and solution in
+                software development, showcasing my skills in various technologies.</p>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects-section">
+        <div class="container">
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/lenscraft.png" alt="LensCraft">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/LensCraft" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithslenscraft.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">LensCraft photographer portfolio</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">CSS3</span>
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">LensCraft is a professional photography portfolio website
+                            designed to showcase stunning visual work while demonstrating modern web development skills.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/viedeotool.png" alt="Video Testimonial Tool">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/Video-Testimonial-Recorder" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsvideorecorder.netlify.app/" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Video Testimonial Tool</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">MediaRecorder API</span>
+                            <span class="project-tag">Video Testimonial Tool</span>
+                        </div>
+                        <p class="project-description">The application, built using HTML, CSS, and JavaScript, enables
+                            users to effortlessly record video testimonials using their webcam and microphone, utilizing
+                            the MediaRecorder API.</p>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/travelcb.png" alt="Travelling website">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/travelcb" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://travelcb.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Website for Travelling</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">CSS3</span>
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">UI/UX</span>
+                        </div>
+                        <p class="project-description">A website created using HTML5, CSS3 and JavaScript to deliver a
+                            clear idea about Sri Lankan tourism and Sri Lanka as a Travel destination. I include
+                            scrolling animations and transitions to increase user experience.</p>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/recipeapp.png" alt="Recipe App">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/recipe-app" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsrecipeapp.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Recipe Search App</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">API</span>
+                            <span class="project-tag">Search App</span>
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">HTML5</span>
+                        </div>
+                        <p class="project-description">A minimalistic web application intergrate with API for search
+                            food recipes and get instructions to make each foods.</p>
+                    </div>
+                </div>
+
+                <!-- Project 5 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/banksystem.png" alt="bank system">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/BankSystem-v0.1" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://github.com/DinithSenarathna/BankSystem-v0.1" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Bank System</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Python</span>
+                            <span class="project-tag">Json</span>
+                            <span class="project-tag">Data-Encription</span>
+                            <span class="project-tag">end-to-end</span>
+                        </div>
+                        <p class="project-description">BankSystem v0.1 is a Python-based banking system that enables
+                            users to manage accounts, perform transactions, and securely store sensitive data using
+                            encryption.</p>
+                    </div>
+                </div>
+
+                <!-- Project 6 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/nftmarketpalce.png" alt="NFT Marketplace">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/NFT-marketplace" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithshub.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">NFT-marketplace</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">NFT</span>
+                            <span class="project-tag">UI</span>
+                            <span class="project-tag">UX</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">Minimalistic marketplace UI for NFT. Easy to use and space for
+                            make hot deals. Used plain HTML5 and CSS3.</p>
+                    </div>
+                </div>
+
+                <!-- Project 7 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/weatherapp.png" alt="Weather App">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/weather-appilcation" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsweatherapp.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Weather Application</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">API</span>
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">real-time</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">The Weather App is a modern web application that provides users
+                            with weather information for any location, including temperature, weather description,
+                            humidity, and wind speed.</p>
+                    </div>
+                </div>
+
+                <!-- Project 8 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/musicapp.png" alt="Music App">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/music-player-UI" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsmusicapp.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Music Player</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Music player</span>
+                            <span class="project-tag">UI</span>
+                            <span class="project-tag">UX</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">A modern and responsive music player built with HTML, CSS, and
+                            JavaScript. The app features an intuitive sidebar for easy navigation, a sleek music player,
+                            and sections for trending songs, genres, playlists, and more.</p>
+                    </div>
+                </div>
+
+                <!-- Project 9 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/markdowneditor.png" alt="Markdown Editor">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/code-editor" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://github.com/DinithSenarathna/code-editor" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Markdown Editor</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Reactjs</span>
+                            <span class="project-tag">Readme Editor</span>
+                            <span class="project-tag">UX</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">Web Application for create readme description for Github. Users
+                            can use pre-programmed code snippets and download their works.</p>
+                    </div>
+                </div>
+
+                <!-- Project 10 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/fetsac.png" alt="FETSAC">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/FETSAC" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://fetsac.netlify.app/" class="project-btn" aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">FETSAC</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">CSS3</span>
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">Website I created for an final year projects and research
+                            publication event called FETSAC in The Open University of Sri Lanka in 2024.</p>
+                    </div>
+                </div>
+
+                <!-- Project 11 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/correncyconvertor.png" alt="Currency Convertor">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/currency-convertor" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithscurrencyconverter.netlify.app/" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Currency Convertor</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">ExchangeRate-API</span>
+                            <span class="project-tag">UI</span>
+                            <span class="project-tag">UX</span>
+                            <span class="project-tag">Real-time</span>
+                        </div>
+                        <p class="project-description">This Currency Converter program allows users to convert values
+                            between currencies, fetching recent rates via an API, with a simple interface for selecting
+                            source and target currencies.</p>
+                    </div>
+                </div>
+
+                <!-- Project 12 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/formvalidator.png" alt="form validator">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/JavaScript-Form-Validator" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsjsformvalidator.netlify.app/" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">JavaScript Form Validator</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">JavaScript</span>
+                            <span class="project-tag">Real-time</span>
+                            <span class="project-tag">HTML5</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">This browser-based application enables users to record video
+                            testimonials using webcam and microphone, using HTML, CSS, and JavaScript. It also provides
+                            form validation and immediate feedback.</p>
+                    </div>
+                </div>
+
+                <!--project 13-->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/contactform.png" alt="Contact Form">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/contactform" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithscontactform.netlify.app/" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Contact Form</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Firebase</span>
+                            <span class="project-tag">Back-end</span>
+                            <span class="project-tag">Form</span>
+                            <span class="project-tag">Real-time</span>
+                        </div>
+                        <p class="project-description">The contact form, crafted using HTML, CSS, and JavaScript,
+                            securely stores messages in the Firebase Realtime Database, provides real-time feedback, and
+                            features animations for enhanced user experience.</p>
+                    </div>
+                </div>
+
+                <!-- Project 14 -->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/web editor.png" alt="AR Interior Design">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/code-editor" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://github.com/DinithSenarathna/code-editor" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Web Editor</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Reactjs</span>
+                            <span class="project-tag">Code-Editor</span>
+                            <span class="project-tag">Code-Playground</span>
+                        </div>
+                        <p class="project-description">This web-editor perform to see outputs of HTML, CSS and
+                            JavaScript in real-time. Included user-friendly structure and optimized readability of
+                            source codes.</p>
+                    </div>
+                </div>
+
+                <!--project 15-->
+                <div class="project-card">
+                    <div class="project-img">
+                        <img src="../assests/projects/adminpannal.png" alt="Admin Pannal">
+                        <div class="project-overlay">
+                            <a href="https://github.com/DinithSenarathna/admin-pannel" class="project-btn"
+                                aria-label="GitHub Repository">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="https://dinithsadminpannel.netlify.app/" class="project-btn"
+                                aria-label="Live Demo">
+                                <i class="fas fa-external-link-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Admin Pannal</h3>
+                        <div class="project-tags">
+                            <span class="project-tag">Admin</span>
+                            <span class="project-tag">UI</span>
+                            <span class="project-tag">UX</span>
+                            <span class="project-tag">Responsive</span>
+                        </div>
+                        <p class="project-description">Fully detailed Admin pannel UI for multi purpose. Easy to use and
+                            user-friendly. Light & Dark theme supported.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="social-links">
+                <a href="https://github.com/DinithSenarathna" target="_blank" aria-label="GitHub"><i
+                        class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/dinith-senarathna-407878355" target="_blank" aria-label="LinkedIn"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="https://x.com/i/flow/login?redirect_after_login=%2FDinith_cb" target="_blank"
+                    aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:dinithc.b.senarathna@gmail.com" target="_blank" aria-label="Email"><i
+                        class="fas fa-envelope"></i></a>
+            </div>
+            <p class="copyright">© 2025 Dinith Senarathna. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Binary Rain Effect
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Characters for the rain
+        const characters = '010101010101001010101010101';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        // Create drops array
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        // Draw the rain
+        function drawBinaryRain() {
+            // Semi-transparent background to create trail effect
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0ea5e9';
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Reset drop if it reaches bottom or randomly
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        // Animation loop for binary rain
+        setInterval(drawBinaryRain, 33);
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Responsive canvas on resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Project card animation on scroll
+        const projectCards = document.querySelectorAll('.project-card');
+
+        function animateOnScroll() {
+            projectCards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (cardTop < windowHeight * 0.85) {
+                    card.style.animation = 'fadeIn 0.8s ease forwards';
+                }
+            });
+        }
+
+        // Initialize animations
+        window.addEventListener('load', () => {
+            projectCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+
+</html>

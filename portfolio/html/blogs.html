@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs | Dinith's Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for theme colors */
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #7e22ce;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #cbd5e1;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Binary Rain Background */
+        #binary-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        nav.scrolled {
+            padding: 10px 0;
+            background: rgba(2, 6, 23, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 150px 0 50px;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .page-header p {
+            color: var(--gray-light);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Blogs Section */
+        .blogs-section {
+            padding: 50px 0 100px;
+        }
+
+        .blogs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .blog-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .blog-img {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .blog-card:hover .blog-img img {
+            transform: scale(1.05);
+        }
+
+        .blog-content {
+            padding: 25px;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: var(--primary);
+        }
+
+        .blog-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-category {
+            background: rgba(14, 165, 233, 0.1);
+            padding: 3px 12px;
+            border-radius: 50px;
+        }
+
+        .blog-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--light);
+            transition: color 0.3s ease;
+        }
+
+        .blog-card:hover .blog-title {
+            color: var(--primary);
+        }
+
+        .blog-excerpt {
+            color: var(--gray-light);
+            line-height: 1.6;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .blog-card:hover .read-more {
+            transform: translateX(5px);
+        }
+
+        /* Blog Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(2, 6, 23, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .blog-modal {
+            background: var(--dark);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(50px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+
+        .modal-overlay.active .blog-modal {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-header {
+            padding: 25px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(100, 116, 139, 0.2);
+            color: var(--light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: var(--light);
+            max-width: 90%;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 20px;
+            color: var(--gray-light);
+            font-size: 0.95rem;
+        }
+
+        .modal-content {
+            padding: 30px;
+            overflow-y: auto;
+            max-height: calc(90vh - 200px);
+        }
+
+        .modal-content p {
+            margin-bottom: 20px;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--gray-light);
+        }
+
+        .modal-content h2 {
+            color: var(--primary);
+            margin: 30px 0 15px;
+            font-size: 1.8rem;
+        }
+
+        .modal-content h3 {
+            color: var(--light);
+            margin: 25px 0 12px;
+            font-size: 1.4rem;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content pre {
+            background: rgba(2, 6, 23, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(14, 165, 233, 0.2);
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95rem;
+        }
+
+        .modal-content code {
+            background: rgba(14, 165, 233, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 40px 0 20px;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--light);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .blogs-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .page-header h1 {
+                font-size: 3rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .page-header {
+                padding: 130px 0 40px;
+            }
+            
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .blogs-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto;
+                gap: 30px;
+            }
+            
+            .modal-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .page-header p {
+                font-size: 1rem;
+            }
+            
+            .blog-card {
+                max-width: 350px;
+                margin: 0 auto;
+            }
+            
+            .modal-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Binary Rain Background -->
+    <canvas id="binary-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="home.html" class="logo">Dinith<span>.dev</span></a>
+            <div class="nav-links">
+                <a href="home.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="blogs.html" class="active">Blogs</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Blogs Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Techy thoughts from me</h1>
+            <p>Explore my thoughts on modern web development, programming techniques, and industry trends. Each article is crafted to share knowledge and experiences.</p>
+        </div>
+    </section>
+
+    <!-- Blogs Section -->
+    <section class="blogs-section">
+        <div class="container">
+            <div class="blogs-grid">
+                <!-- Blog 1 -->
+                <div class="blog-card" data-blog="1">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="React Performance">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 06, 2025</span>
+                            <span class="blog-category">React</span>
+                        </div>
+                        <h3 class="blog-title">Optimizing React Applications for Peak Performance</h3>
+                        <p class="blog-excerpt">Learn advanced techniques to boost your React app's performance, including memoization, code splitting, and virtualization.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Blog 2 -->
+                <div class="blog-card" data-blog="2">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="TypeScript">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 05, 2025</span>
+                            <span class="blog-category">TypeScript</span>
+                        </div>
+                        <h3 class="blog-title">TypeScript Best Practices for Large-Scale Applications</h3>
+                        <p class="blog-excerpt">Discover how to leverage TypeScript's advanced features to build maintainable and scalable enterprise applications.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Blog 3 -->
+                <div class="blog-card" data-blog="3">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1172&q=80" alt="Serverless">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 04, 2025</span>
+                            <span class="blog-category">Serverless</span>
+                        </div>
+                        <h3 class="blog-title">Building Scalable APIs with Serverless Architecture</h3>
+                        <p class="blog-excerpt">A deep dive into creating cost-effective, scalable APIs using AWS Lambda and API Gateway with practical examples.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Blog 4 -->
+                <div class="blog-card" data-blog="4">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="WebAssembly">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 03, 2025</span>
+                            <span class="blog-category">WebAssembly</span>
+                        </div>
+                        <h3 class="blog-title">WebAssembly: The Future of Web Performance</h3>
+                        <p class="blog-excerpt">Exploring how WebAssembly is revolutionizing web performance and enabling new types of web applications.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Blog 5 -->
+                <div class="blog-card" data-blog="5">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="GraphQL">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 02, 2025</span>
+                            <span class="blog-category">GraphQL</span>
+                        </div>
+                        <h3 class="blog-title">GraphQL vs REST: Choosing the Right API Approach</h3>
+                        <p class="blog-excerpt">A comprehensive comparison to help you decide when to use GraphQL or REST for your next API project.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Blog 6 -->
+                <div class="blog-card" data-blog="6">
+                    <div class="blog-img">
+                        <img src="https://images.unsplash.com/photo-1533750349088-cd871a92f312?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="CSS Architecture">
+                    </div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-date"><i class="far fa-calendar"></i> June 01, 2025</span>
+                            <span class="blog-category">CSS</span>
+                        </div>
+                        <h3 class="blog-title">Modern CSS Architecture for Scalable Applications</h3>
+                        <p class="blog-excerpt">Strategies for organizing CSS in large applications using methodologies like BEM, ITCSS, and CSS-in-JS.</p>
+                        <a href="#" class="read-more">Read Full Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Modals -->
+    <div class="modal-overlay" id="blog-modal-overlay">
+        <div class="blog-modal">
+            <div class="modal-header">
+                <div class="modal-close"><i class="fas fa-times"></i></div>
+                <h2 class="modal-title">Optimizing React Applications for Peak Performance</h2>
+                <div class="modal-meta">
+                    <span><i class="far fa-calendar"></i> June 06, 2025</span>
+                    <span><i class="far fa-clock"></i> 8 min read</span>
+                    <span><i class="fas fa-tag"></i> React, Performance, JavaScript</span>
+                </div>
+            </div>
+            <div class="modal-content">
+                <p>In the world of modern web development, React has become the go-to library for building user interfaces. However, as applications grow in complexity, performance issues can creep in, leading to sluggish user experiences. In this article, I'll share advanced techniques I've used to optimize React applications for peak performance.</p>
+                
+                <h2>Understanding React's Rendering Behavior</h2>
+                <p>Before diving into optimization techniques, it's crucial to understand how React handles rendering. When a component's state or props change, React re-renders that component and its children. While the virtual DOM diffing algorithm is efficient, unnecessary re-renders can still impact performance.</p>
+                
+                <h3>Identifying Performance Bottlenecks</h3>
+                <p>Use React DevTools Profiler to identify components that re-render too often or take too long to render. This tool helps you visualize component render times and identify optimization opportunities.</p>
+                
+                <pre><code>import React, { Profiler } from 'react';
+
+function onRenderCallback(
+  id, // the "id" prop of the Profiler tree that has just committed
+  phase, // either "mount" (if the tree just mounted) or "update" (if it re-rendered)
+  actualDuration, // time spent rendering the committed update
+  baseDuration, // estimated time to render the entire subtree without memoization
+  startTime, // when React began rendering this update
+  commitTime, // when React committed this update
+  interactions // the Set of interactions belonging to this update
+) {
+  // Aggregate or log render timings...
+}</code></pre>
+                
+                <h2>Memoization Techniques</h2>
+                <p>Memoization prevents unnecessary re-renders by caching component output:</p>
+                
+                <h3>React.memo for Functional Components</h3>
+                <p>Wrap functional components with React.memo to prevent re-renders when props haven't changed:</p>
+                
+                <pre><code>const MyComponent = React.memo(function MyComponent(props) {
+  /* render using props */
+});</code></pre>
+                
+                <h3>useMemo for Expensive Calculations</h3>
+                <p>Cache the results of expensive calculations with useMemo:</p>
+                
+                <pre><code>const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);</code></pre>
+                
+                <h3>useCallback for Function References</h3>
+                <p>Preserve function references between renders with useCallback:</p>
+                
+                <pre><code>const memoizedCallback = useCallback(() => {
+  doSomething(a, b);
+}, [a, b]);</code></pre>
+                
+                <h2>Code Splitting</h2>
+                <p>Reduce initial bundle size by splitting your code into smaller chunks:</p>
+                
+                <h3>React.lazy for Component-Level Splitting</h3>
+                <p>Load components only when they're needed:</p>
+                
+                <pre><code>const OtherComponent = React.lazy(() => import('./OtherComponent'));
+
+function MyComponent() {
+  return (
+    &lt;React.Suspense fallback={&lt;div>Loading...&lt;/div>}>
+      &lt;OtherComponent />
+    &lt;/React.Suspense>
+  );
+}</code></pre>
+                
+                <h2>Virtualization for Large Lists</h2>
+                <p>When rendering large lists, virtualization dramatically improves performance by only rendering items in the viewport:</p>
+                
+                <pre><code>import { FixedSizeList as List } from 'react-window';
+
+const Row = ({ index, style }) => (
+  &lt;div style={style}>Row {index}&lt;/div>
+);
+
+const MyList = () => (
+  &lt;List
+    height={600}
+    itemCount={1000}
+    itemSize={35}
+    width={300}
+  >
+    {Row}
+  &lt;/List>
+);</code></pre>
+                
+                <h2>Optimizing Context API Usage</h2>
+                <p>Context API is powerful but can cause performance issues if not used carefully:</p>
+                
+                <ul>
+                    <li>Split contexts by concern rather than having one giant context</li>
+                    <li>Use memoization for context consumers</li>
+                    <li>Consider using state management libraries for complex state</li>
+                </ul>
+                
+                <h2>Conclusion</h2>
+                <p>Optimizing React applications requires a combination of understanding React's rendering behavior, leveraging memoization techniques, and strategically loading code. By implementing these advanced techniques, you can create applications that remain performant even as they scale in complexity.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="social-links">
+                <a href="https://github.com/DinithSenarathna" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/dinith-senarathna-407878355" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://x.com/i/flow/login?redirect_after_login=%2FDinith_cb" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:dinithc.b.senarathna@gmail.com" target="_blank" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p class="copyright">© 2025 Dinith Senarathna. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Binary Rain Effect
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Characters for the rain
+        const characters = '010101010101001010101010101';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        
+        // Create drops array
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+        
+        // Draw the rain
+        function drawBinaryRain() {
+            // Semi-transparent background to create trail effect
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0ea5e9';
+            ctx.font = `${fontSize}px monospace`;
+            
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // Reset drop if it reaches bottom or randomly
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                drops[i]++;
+            }
+        }
+        
+        // Animation loop for binary rain
+        setInterval(drawBinaryRain, 33);
+        
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Responsive canvas on resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Blog card animation on scroll
+        const blogCards = document.querySelectorAll('.blog-card');
+        
+        function animateOnScroll() {
+            blogCards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+                
+                if (cardTop < windowHeight * 0.85) {
+                    card.style.animation = 'fadeIn 0.8s ease forwards';
+                }
+            });
+        }
+        
+        // Initialize animations
+        window.addEventListener('load', () => {
+            blogCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+            
+            animateOnScroll();
+        });
+        
+        window.addEventListener('scroll', animateOnScroll);
+        
+        // Blog Modal Functionality
+        const modalOverlay = document.getElementById('blog-modal-overlay');
+        const closeModal = document.querySelector('.modal-close');
+        
+        // Open modal when clicking a blog card
+        blogCards.forEach(card => {
+            card.addEventListener('click', () => {
+                modalOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            });
+        });
+        
+        // Close modal when clicking close button or outside modal
+        closeModal.addEventListener('click', closeBlogModal);
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeBlogModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeBlogModal();
+            }
+        });
+        
+        function closeBlogModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto'; // Enable background scrolling
+        }
+        
+        // Sample function to change blog content based on selection
+        // In a real implementation, you would fetch the content from a database or API
+        function loadBlogContent(blogId) {
+            console.log(`Loading content for blog ${blogId}`);
+            // This would update the modal content based on the selected blog
+        }
+    </script>
+</body>
+</html>

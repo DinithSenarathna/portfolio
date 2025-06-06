@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Dinith | Dinith's Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        /* CSS Variables for theme colors */
+        :root {
+            --primary: #0ea5e9;
+            --primary-dark: #0284c7;
+            --secondary: #7e22ce;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #cbd5e1;
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--darker);
+            color: var(--light);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Binary Rain Background */
+        #binary-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        nav.scrolled {
+            padding: 10px 0;
+            background: rgba(2, 6, 23, 0.95);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--light);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: 150px 0 50px;
+            position: relative;
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+
+        .page-header p {
+            color: var(--gray-light);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 50px 0 100px;
+        }
+
+        .about-container {
+            display: flex;
+            gap: 50px;
+            align-items: flex-start;
+        }
+
+        .about-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .about-image-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            overflow: hidden;
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 50px rgba(14, 165, 233, 0.4);
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+        }
+
+        .about-image-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg,
+                    transparent,
+                    var(--primary),
+                    transparent,
+                    var(--secondary),
+                    transparent);
+            animation: rotateBorder 8s linear infinite;
+            z-index: -1;
+        }
+
+        .about-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        .about-content {
+            flex: 1;
+        }
+
+        .about-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            color: var(--light);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .about-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 3px;
+        }
+
+        .about-text {
+            color: var(--gray-light);
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+        }
+
+        .resume-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+            position: relative;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .resume-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        .resume-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .resume-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Certificates Section */
+        .certificates-section {
+            padding: 80px 0;
+            background: rgba(15, 23, 42, 0.3);
+            border-radius: 20px;
+            margin: 50px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            color: var(--light);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        .certificates-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .certificate-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: float 4s ease-in-out infinite;
+            animation-delay: calc(0.2s * var(--delay));
+        }
+
+        .certificate-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(14, 165, 233, 0.2);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .certificate-img {
+            height: 220px;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .certificate-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .certificate-card:hover .certificate-img img {
+            transform: scale(1.05);
+        }
+
+        .certificate-content {
+            padding: 25px;
+        }
+
+        .certificate-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--light);
+        }
+
+        .certificate-issuer {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .certificate-date {
+            color: var(--gray-light);
+            font-size: 0.9rem;
+        }
+
+        /* Technologies Section */
+        .technologies-section {
+            padding: 80px 0;
+        }
+
+        .technologies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .tech-card {
+            background: rgba(15, 23, 42, 0.7);
+            border-radius: 15px;
+            padding: 25px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            animation: float 5s ease-in-out infinite;
+            animation-delay: calc(0.1s * var(--delay));
+        }
+
+        .tech-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(14, 165, 233, 0.2);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+
+        .tech-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .tech-name {
+            color: var(--light);
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            padding: 40px 0 20px;
+            border-top: 1px solid rgba(100, 116, 139, 0.2);
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(100, 116, 139, 0.1);
+            color: var(--light);
+            font-size: 1.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            color: var(--gray);
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        /* Animations */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        @keyframes rotateBorder {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .about-content {
+                text-align: center;
+            }
+
+            .about-content h2::after {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .page-header h1 {
+                font-size: 3rem;
+            }
+
+            .certificates-container {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .page-header {
+                padding: 130px 0 40px;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .about-image-container {
+                width: 280px;
+                height: 280px;
+            }
+
+            .technologies-container {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 20px;
+            }
+
+            .tech-icon {
+                font-size: 2.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .page-header p {
+                font-size: 1rem;
+            }
+
+            .about-image-container {
+                width: 220px;
+                height: 220px;
+            }
+
+            .about-content h2 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .certificates-container {
+                grid-template-columns: 1fr;
+            }
+
+            .technologies-container {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+                gap: 15px;
+            }
+
+            .tech-icon {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Binary Rain Background -->
+    <canvas id="binary-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <a href="home.html" class="logo">Dinith<span>.dev</span></a>
+            <div class="nav-links">
+                <a href="home.html">Home</a>
+                <a href="about.html" class="active">About</a>
+                <a href="projects.html">Projects</a>
+                <a href="blogs.html">Blogs</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <div class="mobile-menu">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Who Am I?</h1>
+            <p>Get to know my journey, skills, and professional background as an Undergraduate software engineer
+                passionate about
+                creating innovative solutions.</p>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <div class="about-container">
+                <div class="about-image">
+                    <div class="about-image-container">
+                        <!-- Placeholder for developer image -->
+                        <div
+                            style="width:100%;height:100%;background-image:url('https://raw.githubusercontent.com/DinithSenarathna/DinithSenarathna/main/WhatsApp%20Image%202025-05-26%20at%2017.35.43_a2de1c0c.jpg');background-size:cover;background-position:center;">
+                            <i class="fas fa-user" style="font-size:8rem;color:var(--primary);opacity:0.0;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-content">
+                    <h2>Dinith Senarathna</h2>
+                    <div class="about-text">
+                        <p>Hi! I'm an undergraduate Software Engineering student with a passion for creating innovative
+                            and meaningful digital solutions. I'm enthusiastic about modern tech trends and always
+                            exploring how AI can be integrated to improve real-world applications.
+                        </p>
+                        <p>Beyond coding, I’m deeply interested in sustainability and green energy, and I believe
+                            technology can play a vital role in shaping a cleaner future.</p>
+                        <p>I'm excited to collaborate, learn, and build smarter systems that make a positive impact.</p>
+                    </div>
+                    <a href="https://drive.google.com/file/d/1N6pP3iXbZiTpbn_fnwNFBSLhDwLFmKsf/view?usp=drive_link"
+                        class="resume-btn">
+                        <i class="fas fa-download"></i> Download Resume
+                    </a>
+                </div>
+            </div>
+
+            <!-- Technologies Section -->
+            <section class="technologies-section">
+                <h2 class="section-title">what are things, I know</h2>
+                <div class="technologies-container">
+                    <!-- Tech 1 -->
+                    <div class="tech-card" style="--delay: 1; color: #61DAFB;">
+                        <i class="fab fa-react tech-icon"></i>
+                        <span class="tech-name">React</span>
+                    </div>
+
+                    <!-- Tech 2 -->
+                    <div class="tech-card" style="--delay: 2; color: #339933;">
+                        <i class="fab fa-node-js tech-icon"></i>
+                        <span class="tech-name">Node.js</span>
+                    </div>
+
+                    <!-- Tech 3 -->
+                    <div class="tech-card" style="--delay: 3; color: #F7DF1E;">
+                        <i class="fab fa-js tech-icon"></i>
+                        <span class="tech-name">JavaScript</span>
+                    </div>
+
+                    <!-- Tech 4 -->
+                    <div class="tech-card" style="--delay: 4; color: #3178C6;">
+                        <i class="fab fa-typescript tech-icon"></i>
+                        <span class="tech-name">TypeScript</span>
+                    </div>
+
+                    <!-- Tech 5 -->
+                    <div class="tech-card" style="--delay: 5; color: #1572B6;">
+                        <i class="fab fa-css3-alt tech-icon"></i>
+                        <span class="tech-name">CSS3</span>
+                    </div>
+
+                    <!-- Tech 6 -->
+                    <div class="tech-card" style="--delay: 6; color: #E34F26;">
+                        <i class="fab fa-html5 tech-icon"></i>
+                        <span class="tech-name">HTML5</span>
+                    </div>
+
+                    <!-- Tech 7 -->
+                    <div class="tech-card" style="--delay: 7; color: #764ABC;">
+                        <i class="fab fa-vuejs tech-icon"></i>
+                        <span class="tech-name">Vue.js</span>
+                    </div>
+
+                    <!-- Tech 8 -->
+                    <div class="tech-card" style="--delay: 8; color: #DD0031;">
+                        <i class="fab fa-angular tech-icon"></i>
+                        <span class="tech-name">Angular</span>
+                    </div>
+
+                    <!-- Tech 9 -->
+                    <div class="tech-card" style="--delay: 9; color: #000000;">
+                        <i class="fab fa-github tech-icon"></i>
+                        <span class="tech-name">GitHub</span>
+                    </div>
+
+                    <!-- Tech 10 -->
+                    <div class="tech-card" style="--delay: 10; color: #4479A1;">
+                        <i class="fas fa-database tech-icon"></i>
+                        <span class="tech-name">MongoDB</span>
+                    </div>
+
+                    <!-- Tech 11 -->
+                    <div class="tech-card" style="--delay: 11; color: #336791;">
+                        <i class="fas fa-firebase tech-icon"></i>
+                        <span class="tech-name">Firebase</span>
+                    </div>
+
+                    <!-- Tech 12 -->
+                    <div class="tech-card" style="--delay: 12; color: #F05032;">
+                        <i class="fab fa-git-alt tech-icon"></i>
+                        <span class="tech-name">Git</span>
+                    </div>
+
+                    <!-- Tech 13 -->
+                    <div class="tech-card" style="--delay: 13; color: #007396;">
+                        <i class="fab fa-java tech-icon"></i>
+                        <span class="tech-name">Java</span>
+                    </div>
+
+                    <!-- Tech 14 -->
+                    <div class="tech-card" style="--delay: 14; color: #3776AB;">
+                        <i class="fab fa-python tech-icon"></i>
+                        <span class="tech-name">Python</span>
+                    </div>
+
+                    <!-- Tech 15 -->
+                    <div class="tech-card" style="--delay: 15; color: #21759B;">
+                        <i class="fab fa-wordpress tech-icon"></i>
+                        <span class="tech-name">WordPress</span>
+                    </div>
+
+                    <!-- Tech 16 -->
+                    <div class="tech-card" style="--delay: 16; color: #00C7B7;">
+                        <i class="fas fa-server tech-icon"></i>
+                        <span class="tech-name">Netlify</span>
+                    </div>
+
+                    <!-- Tech 17 -->
+                    <div class="tech-card" style="--delay: 17; color: #000000;">
+                        <i class="fas fa-server tech-icon"></i>
+                        <span class="tech-name">Vercel</span>
+                    </div>
+
+                    <!-- Tech 18 -->
+                    <div class="tech-card" style="--delay: 18; color: #430098;">
+                        <i class="fas fa-server tech-icon"></i>
+                        <span class="tech-name">Heroku</span>
+                    </div>
+
+                    <!-- Tech 19 -->
+                    <div class="tech-card" style="--delay: 19; color: #02569B;">
+                        <i class="fab fa-flutter tech-icon"></i>
+                        <span class="tech-name">Flutter</span>
+                    </div>
+
+                    <!-- Tech 20 -->
+                    <div class="tech-card" style="--delay: 20; color: #F24E1E;">
+                        <i class="fab fa-figma tech-icon"></i>
+                        <span class="tech-name">Figma</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Certificates Section -->
+            <section class="certificates-section">
+                <h2 class="section-title">Achievements, what have I achieved?</h2>
+                <div class="certificates-container">
+
+                    <!-- Certificate 1 -->
+                    <div class="certificate-card" style="--delay: 1;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/UoM_Web-designer-beginner.png"
+                                alt="Web Design for Beginners">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Web Design for Beginners</h3>
+                            <span class="certificate-issuer">University of Moratuwa</span>
+                            <span class="certificate-date">Issued: May 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 2 -->
+                    <div class="certificate-card" style="--delay: 2;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/UoM_front-end-development.png"
+                                alt="Front-End Web Development">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Front-End Web Development</h3>
+                            <span class="certificate-issuer">University of Moratuwa</span>
+                            <span class="certificate-date">Issued: May 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 3 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/sololearn_sql.png" alt="sololearn">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Introduction to SQL</h3>
+                            <span class="certificate-issuer">sololearn</span>
+                            <span class="certificate-date">Issued: Feb 2023 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 4 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/sololearn_python.png" alt="sololearn">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Introduction to Python</h3>
+                            <span class="certificate-issuer">sololearn</span>
+                            <span class="certificate-date">Issued: Feb 2023 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 5 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/sololearn_javascript.png" alt="sololearn">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Introduction to JavaScript</h3>
+                            <span class="certificate-issuer">sololearn</span>
+                            <span class="certificate-date">Issued: May 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 6 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-web-element-locator-strategies.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Web Element Locator Strategies</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 7 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-the-whole-team-approach-to-continuous-testing.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">The Whole Team Approach to Continuous Testing</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 8 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-test-automation-in-devops.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Test Automation in DevOps</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 9 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-source-control-for-test-automation-with-git.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Source Control for Test Automation with GIT</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 10 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-setting-a-foundation-for-successfull-test-automation.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Setting a Foundation for Successfull Test Automation</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 11 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-introduction-to-observability-for-test-automation.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Introduction to Observability for Test Automation</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 12 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-github-actions-for-testing.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Github Actions for Testing</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 13 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-continuous-testing-with-azure-devops.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Continuous Testing with Azure DevOps</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 14 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-codeless-test-automation-with-selenium-ide.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">Codeless Test Automation with Selenium IDE</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+
+                    <!-- Certificate 15 -->
+                    <div class="certificate-card" style="--delay: 3;">
+                        <div class="certificate-img">
+                            <img src="../assests/certificates/certificates_TAU-api-test-automation-with-postman.png"
+                                alt="Test Automation University">
+                        </div>
+                        <div class="certificate-content">
+                            <h3 class="certificate-title">API Test Automation with Postman</h3>
+                            <span class="certificate-issuer">Test Automation University</span>
+                            <span class="certificate-date">Issued: Jun 2025 | No Expiration</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="social-links">
+                <a href="https://github.com/DinithSenarathna" target="_blank" aria-label="GitHub"><i
+                        class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/dinith-senarathna-407878355" target="_blank" aria-label="LinkedIn"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="https://x.com/i/flow/login?redirect_after_login=%2FDinith_cb" target="_blank"
+                    aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="mailto:dinithc.b.senarathna@gmail.com" target="_blank" aria-label="Email"><i
+                        class="fas fa-envelope"></i></a>
+            </div>
+            <p class="copyright">© 2025 Dinith Senarathna. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Binary Rain Effect
+        const canvas = document.getElementById('binary-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas dimensions
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Characters for the rain
+        const characters = '010101010101001010101010101';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+
+        // Create drops array
+        const drops = [];
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        // Draw the rain
+        function drawBinaryRain() {
+            // Semi-transparent background to create trail effect
+            ctx.fillStyle = 'rgba(2, 6, 23, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#0ea5e9';
+            ctx.font = `${fontSize}px monospace`;
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                // Reset drop if it reaches bottom or randomly
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+
+                drops[i]++;
+            }
+        }
+
+        // Animation loop for binary rain
+        setInterval(drawBinaryRain, 33);
+
+        // Navbar scroll effect
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Responsive canvas on resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Animation for elements on scroll
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.certificate-card, .tech-card');
+
+            elements.forEach(el => {
+                const elementTop = el.getBoundingClientRect().top;
+                const windowHeight = window.innerHeight;
+
+                if (elementTop < windowHeight * 0.85) {
+                    el.style.animation = 'fadeIn 0.8s ease forwards';
+                }
+            });
+        };
+
+        // Initialize animations
+        window.addEventListener('load', () => {
+            const certificates = document.querySelectorAll('.certificate-card');
+            const technologies = document.querySelectorAll('.tech-card');
+
+            certificates.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            technologies.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            animateOnScroll();
+        });
+
+        window.addEventListener('scroll', animateOnScroll);
+    </script>
+</body>
+
+</html>
